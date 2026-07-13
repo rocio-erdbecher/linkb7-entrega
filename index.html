@@ -1,0 +1,2566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tern Link B7</title>
+  <link rel="icon" type="image/png" href="img/favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body {
+      width: 100%;
+      font-family: 'Manrope', sans-serif;
+      background: #f8f8f6;
+      color: #0a0a0a;
+    }
+
+    :root {
+      --accent: #CBFF00;
+      --accent-dark: #a8d400;
+      --icon-green: #0a0a0a;
+      --bg: #f8f8f6;
+      --bg-alt: #f3f3f1;
+      --bg-dark: #0f0f0d;
+      --text: #0a0a0a;
+      --text-muted: #666666;
+      --col-gap: 24px;
+      --outer-margin: 60px;
+      --section-pad: 100px;
+    }
+
+    /* ── GRID ── */
+    .grid-inner {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--col-gap);
+      padding-left: var(--outer-margin);
+      padding-right: var(--outer-margin);
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 100;
+      padding-top: 24px;
+      padding-bottom: 24px;
+      transition: background 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+    }
+    nav.scrolled {
+      background: rgba(248,248,246,0.96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 2px 16px rgba(207,255,46,0.35), inset 0 -1.5px 0 rgba(207,255,46,0.6);
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+    .nav-inner {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--col-gap);
+      padding-left: var(--outer-margin);
+      padding-right: var(--outer-margin);
+      align-items: center;
+    }
+    .nav-logo { grid-column: 1 / 3; display: flex; align-items: center; }
+    .nav-logo img { height: 16px; width: auto; object-fit: contain; }
+    .nav-toggle { display: none; }
+    .nav-links {
+      grid-column: 7 / 13;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      list-style: none;
+    }
+    .nav-links li { text-align: center; }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      opacity: 0.4;
+      position: relative;
+      transition: opacity 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .nav-links a:hover { opacity: 0.7; }
+    .nav-links a.active { opacity: 1; }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+    .nav-links a.active::after { width: 100%; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      background: #f5f7eb;
+    }
+    /* Grain overlay */
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.045;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--col-gap);
+      padding-left: var(--outer-margin);
+      padding-right: var(--outer-margin);
+      align-items: center;
+      align-content: center;
+      padding-top: 80px;
+    }
+    .hero-text {
+      grid-column: 2 / 7;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transform: translateY(-120px);
+    }
+    .hero-eyebrow {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      color: var(--text);
+      opacity: 1;
+      text-transform: uppercase;
+    }
+    .hero-title {
+      font-size: 58.5px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.0;
+      letter-spacing: -2px;
+    }
+    .hero-highlight {
+      background: linear-gradient(to right, #CBFF00, #f5f7eb);
+      border-radius: 4px;
+      padding: 0 10px 2px 4px;
+      display: inline-block;
+    }
+    .hero-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.3;
+      max-width: 420px;
+      opacity: 1;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Manrope', sans-serif;
+      padding: 14px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      width: fit-content;
+    }
+    .hero-cta:hover { opacity: 0.8; }
+    .hero-bici-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-bici {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 30% center;
+      display: block;
+    }
+
+    /* ── SECTION SHARED HELPERS ── */
+    .section-eyebrow {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0;
+      text-transform: none;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .highlight {
+      background: linear-gradient(90deg, #CFFF2E 0%, rgba(207,255,46,0.5) 60%, transparent 100%);
+      border-radius: 4px;
+      padding: 0 10px 2px 4px;
+      display: inline;
+    }
+
+    /* ── ESTILOS DE HALOS Y CONTINUIDAD VISUAL ── */
+    .section-caracteristicas, .section-rutina, .section-diferente, .section-plegado, .section-ciudad, .section-accesorios {
+      position: relative;
+      overflow: hidden;
+    }
+    .section-caracteristicas .grid-inner, 
+    .section-rutina .grid-inner, 
+    .section-diferente .grid-inner, 
+    .section-plegado .grid-inner, 
+    .section-ciudad .grid-inner, 
+    .section-accesorios .grid-inner {
+      position: relative;
+      z-index: 2;
+    }
+    .glow-bg {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(203,255,0,0.08) 0%, rgba(203,255,0,0) 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 1;
+      border-radius: 50%;
+    }
+    .glow-left { left: -150px; top: 10%; }
+    .glow-right { right: -150px; bottom: 10%; }
+    .glow-center { left: 50%; top: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; }
+
+    .bg-lines {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    /* ── SECCIÓN 2: DISEÑADA PARA VOS ── */
+    .section-rutina {
+      background: var(--bg);
+      padding: var(--section-pad) 0;
+    }
+    .section-rutina .grid-inner {
+      row-gap: 32px;
+    }
+    .rutina-text {
+      grid-column: 2 / 12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .rutina-text > p.section-eyebrow {
+      margin-bottom: 2px;
+      font-size: 13px;
+    }
+    .rutina-text > p:last-child {
+      margin-top: 8px;
+    }
+    .rutina-text > p {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ── SECCIÓN 2.5: RESUMEN / SE ADAPTA A TU RUTINA ── */
+    .section-resumen {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .resumen-bg {
+      display: block;
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+    .resumen-content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--col-gap);
+      padding: 0 var(--outer-margin);
+      align-items: center;
+      padding-bottom: 40px;
+    }
+    .resumen-text {
+      grid-column: 2 / 7;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      gap: 12px;
+    }
+    .resumen-copy {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+
+    .resumen-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .resumen-bullets li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .resumen-bullets li svg {
+      flex-shrink: 0;
+    }
+    .tick-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #CFFF2E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── SECCIÓN 3: CARACTERÍSTICAS (4 ÍCONOS) ── */
+    .section-caracteristicas {
+      background: var(--bg);
+      padding: var(--section-pad) 0;
+      margin: 40px 0;
+    }
+    .section-caracteristicas .grid-inner { row-gap: 48px; }
+    .caract-title-wrap { grid-column: 2 / 12; }
+    .cards-wrapper {
+      grid-column: 2 / 12;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .feat-card {
+      background: var(--bg-alt);
+      border-radius: 16px;
+      border: 1.5px solid rgba(207,255,46,0.8);
+      padding: 32px 20px 28px;
+      display: grid;
+      grid-template-rows: 56px auto auto;
+      align-items: start;
+      justify-items: center;
+      gap: 12px;
+      text-align: center;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      box-shadow: 0 0 12px rgba(207,255,46,0.35), 0 4px 16px rgba(207,255,46,0.2), 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .feat-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(207,255,46,0.45) 0%, rgba(207,255,46,0.18) 45%, transparent 80%);
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0.06));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      opacity: 1;
+      transform: translateY(100%);
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .feat-card:hover {
+      transform: translateY(-6px);
+      border-color: #CFFF2E;
+      box-shadow: 0 0 20px rgba(207,255,46,0.55), 0 6px 24px rgba(207,255,46,0.3), 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .feat-card:hover::before {
+      transform: translateY(0);
+    }
+    .icon-wrapper {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      align-self: center;
+    }
+    .icon-wrapper svg,
+    .icon-wrapper i {
+      position: relative;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .feat-card:hover .icon-wrapper svg,
+    .feat-card:hover .icon-wrapper i {
+      transform: scale(1.08);
+    }
+    .icon-wrapper i {
+      font-size: 28px;
+      color: var(--text);
+    }
+    .feat-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .feat-card-value { font-size: 16px; font-weight: 600; color: var(--text); display: flex; align-items: center; justify-content: center; text-align: center; }
+    .feat-card-label { font-size: 14px; font-weight: 400; color: var(--text); line-height: 1.4; align-self: start; }
+
+    /* ── SECCIÓN 4: LO QUE LA HACE DIFERENTE ── */
+    .section-diferente {
+      background: var(--bg);
+      padding: var(--section-pad) 0 0;
+    }
+    .section-diferente .grid-inner { display: none; }
+    .diferente-title-wrap {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      text-align: center;
+      z-index: 10;
+      width: 100%;
+      padding: 0 var(--outer-margin);
+      pointer-events: none;
+    }
+    .diferente-title-wrap.anim {
+      transform: translateX(-50%) translateY(28px);
+      opacity: 0;
+    }
+    .diferente-title-wrap.anim.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .diferente-mobile-desc { display: none; }
+    .diferente-layout {
+      position: relative;
+      width: 100%;
+    }
+    .diferente-col-left {
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      width: calc(var(--outer-margin) + (100% - 2 * var(--outer-margin) - 11 * var(--col-gap)) / 4 + var(--col-gap));
+      padding: 40px 16px 40px calc(var(--outer-margin) + ((100% - 2 * var(--outer-margin) - 11 * var(--col-gap)) / 12) + var(--col-gap));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 48px;
+      z-index: 5;
+    }
+    .diferente-bici {
+      position: relative;
+      width: 100%;
+    }
+    .diferente-col-right {
+      position: absolute;
+      top: 0; bottom: 0; right: 0;
+      width: calc(var(--outer-margin) + (100% - 2 * var(--outer-margin) - 11 * var(--col-gap)) / 4 + var(--col-gap));
+      padding: 40px calc(var(--outer-margin) + ((100% - 2 * var(--outer-margin) - 11 * var(--col-gap)) / 12) + var(--col-gap)) 40px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 48px;
+      z-index: 5;
+      box-sizing: border-box;
+    }
+    .diferente-col-right .text-block {
+      text-align: left;
+    }
+    .bici-img { display: block; width: 100%; height: auto; position: relative; z-index: 1; object-fit: contain; object-position: center; }
+    .diag-hotspot {
+      position: absolute;
+      z-index: 3;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      transform: translate(-50%, -50%);
+    }
+    .diag-pill {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #CFFF2E 0%, #b8e600 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .diag-pill::after {
+      content: '+';
+      color: #0a0a0a;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .diag-hotspot.active .diag-pill,
+    .diag-hotspot:hover .diag-pill {
+      box-shadow: 0 0 10px 4px rgba(207,255,46,0.55), 0 0 20px 8px rgba(207,255,46,0.2);
+      transform: scale(1.08);
+    }
+    .diferente-lines-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .diag-line-path {
+      stroke: var(--accent);
+      stroke-width: 2px;
+      fill: none;
+      transition: stroke-dashoffset 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+    .diag-line-path.active { opacity: 1; }
+    .text-block {
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+    .text-block.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .text-block strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 5px;
+      line-height: 1.25;
+    }
+    .text-block span {
+      display: block;
+      font-size: 13px;
+      font-weight: 400;
+      color: #0a0a0a;
+      line-height: 1.4;
+    }
+
+    /* ── SECCIÓN 5: PLEGADO ── */
+    .section-plegado {
+      background: var(--bg);
+      padding: 160px 0;
+      margin: 24px 0;
+    }
+    .plegado-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .section-plegado .grid-inner { row-gap: 64px; }
+    .plegado-title-wrap { grid-column: 2 / 12; text-align: center; }
+    .plegado-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 480px;
+      margin: 8px auto 0;
+    }
+    .plegado-title-wrap .section-eyebrow { color: var(--text-muted); }
+    .plegado-title-wrap .section-title { color: var(--text); }
+
+    /* ── Stepper: círculos verdes conectados por una línea ── */
+    .plegado-stepper {
+      grid-column: 2 / 12;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+    }
+    .plegado-stepper::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(100% / 6);
+      right: calc(100% / 6);
+      height: 2px;
+      background: linear-gradient(to right, rgba(207,255,46,0.25), #CFFF2E 15%, #CFFF2E 85%, rgba(207,255,46,0.25));
+      z-index: 0;
+    }
+    .stepper-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+      padding: 0 12px;
+    }
+    .stepper-circle {
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, #CFFF2E 0%, #b8e600 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #0a0a0a;
+      box-shadow: 0 0 12px 3px rgba(207,255,46,0.4);
+    }
+    .stepper-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 240px;
+    }
+    .stepper-text strong {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .stepper-text span {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .plegado-carousel-container {
+      grid-column: 2 / 12;
+      position: relative;
+      width: 100%;
+    }
+    .plegado-arrow { display: none; }
+    .plegado-photos-wrap {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .plegado-photo {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-alt);
+      display: block;
+      border: 1.5px solid transparent;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .plegado-photo img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.25,0.8,0.25,1);
+    }
+    .plegado-photo:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 24px 6px rgba(207,255,46,0.35), 0 0 8px 2px rgba(207,255,46,0.2);
+    }
+    .plegado-photo:hover img { transform: scale(1.04); }
+    .plegado-label {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 500;
+      color: #ffffff;
+      text-align: center;
+      padding: 28px 12px 14px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.65));
+      z-index: 2;
+    }
+
+    /* ── SECCIÓN 6: TU CIUDAD ── */
+    .section-ciudad {
+      background: var(--bg-alt);
+      padding: var(--section-pad) 0;
+    }
+    .section-ciudad .grid-inner { row-gap: 0; }
+    .ciudad-inner {
+      grid-column: 2 / 12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 52px;
+    }
+    .ciudad-title {
+      font-size: clamp(28px, 3vw, 42px);
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      text-align: center;
+    }
+    .ciudad-title em {
+      font-style: normal;
+      position: relative;
+      display: inline-block;
+    }
+    .ciudad-title em::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -4px;
+      width: 100%; height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .ciudad-photos {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+    .ciudad-photo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .ciudad-photo-item img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 12px;
+      display: block;
+    }
+    .ciudad-photo-item span {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* ── SECCIÓN 7: DISPLAY BANNER ── */
+    .section-display {
+      position: relative;
+      width: 100%;
+      max-height: 320px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .display-bg {
+      display: block;
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      object-position: center 75%;
+    }
+    .display-content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--col-gap);
+      padding-left: var(--outer-margin);
+      padding-right: var(--outer-margin);
+      align-items: center;
+    }
+    .display-text {
+      grid-column: 2 / 12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 28px;
+    }
+    .display-text h2 {
+      font-size: 58.5px;
+      font-weight: 600;
+      color: #070707;
+      line-height: 1.2;
+      letter-spacing: -1.5px;
+    }
+    .display-text h2 .highlight { color: var(--text); }
+    .display-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      width: fit-content;
+      transition: opacity 0.2s;
+    }
+    .display-cta:hover { opacity: 0.88; }
+
+    /* ── SECCIÓN 8: ACCESORIOS ── */
+    .section-accesorios {
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .section-accesorios .grid-inner { row-gap: 0; width: 100%; }
+    .accesorios-inner {
+      grid-column: 2 / 12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+    .accesorios-title-wrap {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .accesorios-title {
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    .carousel-outer {
+      width: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .carousel-arrow {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: #CFFF2E;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #070707;
+      z-index: 3;
+      padding: 0;
+      transition: box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .carousel-arrow:hover { background: #CFFF2E; }
+    .carousel-arrow:active,
+    .carousel-arrow.is-active {
+      box-shadow: 0 0 0 4px rgba(207,255,46,0.3), 0 0 18px 6px rgba(207,255,46,0.55);
+    }
+    .carousel-green-card {
+      flex: 1;
+      min-width: 0;
+    }
+    .carousel-wrapper {
+      width: 100%;
+      overflow: hidden;
+      padding: 48px 0;
+      margin: -48px 0;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 16px;
+      transition: transform 0.4s ease;
+      will-change: transform;
+    }
+    .carousel-slide {
+      position: relative;
+      isolation: isolate;
+      flex: 0 0 calc((100% - 32px) / 3);
+      max-width: calc((100% - 32px) / 3);
+      background: var(--bg-alt);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1.5px solid rgba(0,0,0,0.07);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .carousel-slide.is-center {
+      transform: scale(1.06);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 28px 8px rgba(207,255,46,0.4), 0 0 80px 26px rgba(207,255,46,0.22), 0 14px 30px rgba(0,0,0,0.14);
+      z-index: 2;
+    }
+    .carousel-img-wrap {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      background: var(--bg-alt);
+    }
+    .carousel-halo-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .carousel-slide.is-center .carousel-halo-bg {
+      opacity: 1;
+    }
+    .carousel-img-wrap img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .carousel-caption-wrap {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 2;
+      padding: 44px 14px 16px;
+      background: linear-gradient(to top, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.85) 45%, rgba(255,255,255,0) 100%);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+    .carousel-slide.is-center .carousel-caption-wrap {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .carousel-caption {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #0a0a0a;
+      text-align: center;
+      line-height: 1.25;
+    }
+    .carousel-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .carousel-dot.active {
+      background: var(--accent);
+      transform: scale(1.35);
+      box-shadow: 0 0 8px 3px rgba(207,255,46,0.55);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a0a0a;
+      padding: 64px 0 48px;
+    }
+    .footer-inner {
+      grid-column: 2 / 12;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .footer-brand { display: flex; flex-direction: column; gap: 18px; }
+    .footer-logo img { height: 20px; filter: invert(1); object-fit: contain; }
+    .footer-tagline {
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+      max-width: 240px;
+    }
+    .footer-socials { display: flex; gap: 10px; align-items: center; }
+    .footer-socials a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .footer-socials a:hover { background: var(--accent-dark); }
+    .footer-socials svg { width: 15px; height: 15px; fill: #0a0a0a; }
+    .footer-col { display: flex; flex-direction: column; gap: 16px; }
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: #ffffff; }
+    .footer-contact-info { display: flex; flex-direction: column; gap: 8px; }
+    .footer-contact-info p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.5;
+    }
+    .footer-contact-info p strong {
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+    }
+    .footer-credits {
+      grid-column: 2 / 12;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--accent);
+      text-align: center;
+    }
+
+
+    /* ── SLIDER DE IMÁGENES EN SECCIÓN ACERCA DE ── */
+    .rutina-cards {
+      grid-column: 2 / 12;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .rutina-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: #eee;
+      border: 1.5px solid rgba(207,255,46,0.6);
+      box-shadow: 0 0 12px 2px rgba(207,255,46,0.25), 0 12px 32px -4px rgba(207,255,46,0.4);
+      transition: box-shadow 0.35s ease;
+    }
+
+    .rutina-card:hover {
+      box-shadow: 0 0 22px 6px rgba(207,255,46,0.55), 0 0 40px 12px rgba(207,255,46,0.25), 0 16px 40px -4px rgba(207,255,46,0.5);
+    }
+
+    .rutina-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .rutina-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .rutina-card-img-mountain {
+      object-position: 25% 75% !important;
+    }
+
+    /* Degradé sutil para legibilidad del texto */
+    .rutina-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(207,255,46,0.75) 0%, rgba(207,255,46,0.3) 45%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .rutina-card-caption {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      color: #070707;
+      z-index: 2;
+    }
+
+    .rutina-card-caption strong {
+      display: block;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #070707;
+    }
+
+    .rutina-card-caption p {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: rgba(7,7,7,0.75);
+      margin: 0;
+    }
+
+
+    /* ── ANIMACIONES DE ENTRADA ── */
+    .anim {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .anim.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .anim-fade {
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    .anim-fade.visible {
+      opacity: 1;
+    }
+    /* Delays escalonados para cards */
+    .anim-d1 { transition-delay: 0.05s; }
+    .anim-d2 { transition-delay: 0.15s; }
+    .anim-d3 { transition-delay: 0.25s; }
+    .anim-d4 { transition-delay: 0.35s; }
+    .anim-d5 { transition-delay: 0.45s; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      :root {
+        --outer-margin: 20px;
+        --col-gap: 12px;
+        --section-pad: 64px;
+      }
+
+      /* Navbar */
+      .nav-logo { grid-column: 1 / 10; }
+      .nav-toggle {
+        grid-column: 10 / 13;
+        justify-self: end;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 26px; height: 18px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 110;
+        padding: 0;
+      }
+      .nav-toggle span {
+        display: block;
+        width: 100%; height: 2px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+      }
+      .nav-toggle.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+      .nav-toggle.open span:nth-child(2) { opacity: 0; }
+      .nav-toggle.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+      .nav-links {
+        display: flex;
+        position: fixed;
+        top: 0; right: 0;
+        width: 75%;
+        max-width: 280px;
+        height: 100vh;
+        background: #f8f8f6;
+        border-left: 1px solid rgba(0,0,0,0.08);
+        flex-direction: column;
+        gap: 24px;
+        padding: 100px 28px 40px;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        z-index: 105;
+        box-shadow: -8px 0 40px rgba(0,0,0,0.1);
+        list-style: none;
+      }
+      .nav-links.open { transform: translateX(0); }
+      .nav-links a { font-size: 20px; font-weight: 600; opacity: 0.75; }
+
+      /* Hero */
+      .hero { height: 100svh; }
+      .hero-content {
+        padding-top: 160px;
+        padding-bottom: 260px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .hero-text {
+        grid-column: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        transform: none;
+      }
+      .hero-title { font-size: clamp(38px, 10vw, 56px); letter-spacing: -1.5px; }
+      .hero-subtitle { font-size: 15px; max-width: 280px; }
+      .hero-bici-wrap {
+        position: absolute;
+        bottom: -20%;
+        left: 50%; right: auto;
+        width: 115%;
+        max-width: 440px;
+        height: auto;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        transform: translate(-50%, 0);
+        pointer-events: none;
+      }
+      .hero-bici {
+        position: relative;
+        right: auto;
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Sección 2: Rutina */
+      .section-rutina .grid-inner { gap: 24px; }
+      .rutina-text { grid-column: 1 / -1; max-width: 100%; }
+      .rutina-cards { grid-column: 1 / -1; grid-template-columns: 1fr; max-width: 100%; }
+      .rutina-card { aspect-ratio: 16/10; }
+
+      /* Sección 3: Características */
+      .caract-title-wrap { grid-column: 1 / -1; }
+      .cards-wrapper {
+        grid-column: 1 / -1;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .feat-card { padding: 24px 16px 20px; }
+
+      /* Sección 4: Diferente */
+      .diferente-title-wrap { 
+        grid-column: 1 / -1; 
+        position: relative !important; 
+        top: auto !important; 
+        left: auto !important; 
+        transform: none !important; 
+        padding: var(--section-pad) var(--outer-margin) 24px; 
+        pointer-events: auto; 
+        text-align: center;
+        width: 100%;
+      }
+      .diferente-layout {
+        grid-column: 1 / -1;
+        grid-template-columns: 1fr;
+        min-height: auto;
+        row-gap: 20px;
+      }
+      .diferente-col-left, .diferente-col-right { display: none; }
+      .diferente-bici { grid-column: 1 / -1; width: 96%; margin: 0 auto; }
+      /* Sección 4: Diferente — mobile */
+      .diferente-col-left, .diferente-col-right { display: none; }
+      .diferente-lines-svg { display: none; }
+      /* Sección 4: Mobile numbered circles + accordion */
+      .diag-hotspot { display: none !important; }
+      .mobile-num-dot {
+        display: flex !important;
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 5;
+        box-shadow: 0 0 0 0 rgba(207,255,46,0);
+        font-family: 'Manrope', sans-serif;
+        transition: background 0.25s ease, box-shadow 0.25s ease;
+      }
+      .mobile-num-dot::before,
+      .mobile-num-dot::after {
+        content: '';
+        position: absolute;
+        background: #0a0a0a;
+        border-radius: 1px;
+      }
+      .mobile-num-dot::before {
+        width: 10px;
+        height: 2px;
+      }
+      .mobile-num-dot::after {
+        width: 2px;
+        height: 10px;
+      }
+      .mobile-num-dot.active {
+        background: #0a0a0a;
+        box-shadow: 0 0 18px 6px rgba(207,255,46,0.7);
+      }
+      .mobile-num-dot.active::before,
+      .mobile-num-dot.active::after {
+        background: var(--accent);
+      }
+      .mobile-accordion {
+        display: flex !important;
+        flex-direction: column;
+        gap: 0;
+        margin: 0 var(--outer-margin);
+        border-radius: 0;
+        overflow: visible;
+        border: none;
+      }
+      .mobile-accordion-item {
+        border-bottom: 1px solid rgba(207,255,46,0.4);
+        background: transparent;
+      }
+      .mobile-accordion-item:last-child { border-bottom: 1px solid rgba(207,255,46,0.4); }
+      .mobile-accordion-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 16px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: 'Manrope', sans-serif;
+        text-align: left;
+        gap: 12px;
+      }
+      .mobile-accordion-trigger-left {
+        display: flex;
+        align-items: center;
+        gap: 0;
+      }
+      .mobile-accordion-num { display: none; }
+      .mobile-accordion-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .mobile-accordion-arrow {
+        font-size: 16px;
+        color: var(--text-muted);
+        transition: transform 0.25s ease;
+        flex-shrink: 0;
+      }
+      .mobile-accordion-item.open .mobile-accordion-arrow {
+        transform: rotate(180deg);
+      }
+      .mobile-accordion-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        padding: 0 16px;
+        font-size: 14.5px;
+        color: var(--text);
+        line-height: 1.6;
+      }
+      .mobile-accordion-item.open .mobile-accordion-body {
+        max-height: 160px;
+        padding: 0 16px 16px;
+      }
+
+
+
+      /* Sección 5: Plegado */
+      .plegado-title-wrap { grid-column: 1 / -1; }
+      .plegado-stepper {
+        grid-column: 1 / -1;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+      }
+      .plegado-stepper::before {
+        display: none;
+      }
+      .stepper-step {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        padding: 0;
+        width: 100%;
+      }
+      .stepper-text { max-width: 280px; align-items: center; }
+      .plegado-carousel-container {
+        grid-column: 1 / -1;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .plegado-photos-wrap {
+        display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        gap: 12px;
+        padding: 0 var(--outer-margin);
+        scrollbar-width: none;
+        background: transparent;
+        border-radius: 0;
+        grid-template-columns: unset;
+      }
+      .plegado-photos-wrap::-webkit-scrollbar { display: none; }
+      .plegado-photo {
+        flex: 0 0 78%;
+        scroll-snap-align: center;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .plegado-photo img {
+        width: 100%;
+        aspect-ratio: 4/3;
+        object-fit: cover;
+        display: block;
+      }
+      .plegado-photo:hover img { transform: none; }
+      .plegado-label {
+        position: absolute;
+        bottom: 0; left: 0;
+        width: 100%;
+        background: linear-gradient(transparent, rgba(0,0,0,0.65));
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 500;
+        text-align: center;
+        padding: 28px 12px 14px;
+      }
+      .plegado-arrow {
+        display: flex;
+        position: absolute;
+        top: 50%; transform: translateY(-50%);
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.08);
+        color: #ffffff;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        z-index: 10;
+        transition: background 0.2s;
+      }
+      .plegado-arrow.prev { left: 4px; }
+      .plegado-arrow.next { right: 4px; }
+
+      /* Sección 6: Ciudad */
+      .ciudad-inner { grid-column: 1 / -1; }
+      .ciudad-photos { grid-template-columns: repeat(2, 1fr); }
+
+      /* Sección 7: Display */
+      .section-display { height: 240px; }
+      .display-bg { object-position: center bottom; }
+      .display-content { grid-template-columns: 1fr; }
+      .display-text { grid-column: 1 / -1; }
+      .display-text h2 { font-size: clamp(38px, 10vw, 56px); letter-spacing: -1.5px; line-height: 1.1; }
+
+      /* Tipografía global mobile */
+      .section-title,
+      .accesorios-title,
+      .ciudad-title,
+      .plegado-title {
+        font-size: 24px;
+        letter-spacing: -0.3px;
+        line-height: 1.15;
+      }
+      .section-eyebrow {
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+
+      /* Sección 2.5: Resumen */
+      .section-resumen { display: flex; flex-direction: column; }
+      .resumen-content { position: relative; inset: auto; justify-content: center; padding: 32px 20px; order: -1; }
+      .resumen-text { grid-column: 1 / -1; max-width: 100%; align-items: center; text-align: center; }
+      .resumen-bg { margin-top: 24px; }
+      .resumen-copy {
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      .resumen-copy br { display: none; }
+      .resumen-bullets li {
+        font-size: 14px;
+      }
+
+      /* Accesorios mobile */
+      .accesorios-inner { grid-column: 1 / -1; }
+      .carousel-outer { gap: 0; }
+      .carousel-arrow { display: none; }
+      .carousel-wrapper {
+        width: 100%;
+        overflow: hidden;
+        padding: 48px 0;
+        margin: -48px auto;
+      }
+      .carousel-track {
+        gap: 16px;
+      }
+      .carousel-slide {
+        flex: 0 0 80%;
+        max-width: 80%;
+        border-radius: 12px;
+      }
+      .carousel-img-wrap img {
+        aspect-ratio: 5/4;
+      }
+      .carousel-caption { font-size: 14px; }
+      .carousel-dots { display: flex; margin-top: -4px; gap: 10px; }
+      .carousel-slide.is-center {
+        transform: none;
+      }
+
+      /* Footer */
+      .footer-inner { grid-column: 1 / -1; grid-template-columns: 1fr; gap: 40px; }
+      .footer-credits { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+
+ 
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="img/logo_navbar.png" alt="Tern" />
+      </a>
+      <button class="nav-toggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#caracteristicas">Características</a></li>
+        <li><a href="#beneficios">Componentes</a></li>
+        <li><a href="#plegado">Plegado</a></li>
+        <li><a href="#accesorios">Accesorios</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio" data-nav="inicio">
+    <!-- Grain texture -->
+    <svg class="hero-grain" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+        <feComposite in2="SourceGraphic" operator="in"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#grain)"/>
+    </svg>
+
+    <div class="hero-bici-wrap">
+      <picture>
+        <source media="(max-width: 768px)" srcset="img/hero-city-mobile.png" />
+        <img class="hero-bici" src="img/hero-halo.jpg" alt="Tern Link B7" />
+      </picture>
+    </div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <p class="hero-eyebrow anim">Link B7</p>
+        <h1 class="hero-title anim anim-d1">
+          Cabe en tu vida,<br><span class="hero-highlight">anda en tu ciudad</span>
+        </h1>
+        <p class="hero-subtitle anim anim-d2">Una bicicleta ágil y compacta, ideal para transitar la ciudad libremente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3: CARACTERÍSTICAS (4 ÍCONOS) -->
+  <section class="section-caracteristicas" id="caracteristicas" data-nav="caracteristicas">
+    <!-- Glow y Líneas de Fondo -->
+    <div class="glow-bg glow-center" style="opacity: 0.6;"></div>
+    <div class="bg-lines">
+      <svg viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <line x1="100" y1="50" x2="1300" y2="530" stroke="url(#lineGrad2)" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/>
+        <line x1="200" y1="20" x2="1200" y2="420" stroke="url(#lineGrad3)" stroke-width="0.5" stroke-linecap="round" opacity="0.25"/>
+        <defs>
+          <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#CFFF2E" stop-opacity="0.45"/>
+            <stop offset="50%" stop-color="#CFFF2E" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#CFFF2E" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="lineGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#CFFF2E" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="#CFFF2E" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#CFFF2E" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="lineGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#CFFF2E" stop-opacity="0.2"/>
+            <stop offset="50%" stop-color="#CFFF2E" stop-opacity="0.08"/>
+            <stop offset="100%" stop-color="#CFFF2E" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="grid-inner">
+      <div class="cards-wrapper">
+        <div class="feat-card anim anim-d1">
+          <div class="icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--icon-green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.875 12c.621 0 1.125 .512 1.125 1.143v5.714c0 .631 -.504 1.143 -1.125 1.143h-15.875a1 1 0 0 1 -1 -1v-5.857c0 -.631 .504 -1.143 1.125 -1.143h15.75"/><path d="M9 12v2"/><path d="M6 12v3"/><path d="M12 12v3"/><path d="M18 12v3"/><path d="M15 12v2"/><path d="M3 3v4"/><path d="M3 5h18"/><path d="M21 3v4"/></svg>
+          </div>
+          <div class="feat-card-info">
+            <span class="feat-card-value">12,1 kg</span>
+            <span class="feat-card-label">Fácil de transportar y llevar<br>a todos lados sin esfuerzo</span>
+          </div>
+        </div>
+        <div class="feat-card anim anim-d2">
+          <div class="icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="var(--icon-green)" viewBox="0 0 256 256"><path d="M221.28,34.75a64,64,0,0,0-90.49,0L60.69,104A15.9,15.9,0,0,0,56,115.31v73.38L26.34,218.34a8,8,0,0,0,11.32,11.32L67.32,200H140.7A15.92,15.92,0,0,0,152,195.32l0,0,69.23-70A64,64,0,0,0,221.28,34.75ZM142.07,46.06A48,48,0,0,1,211.79,112H155.33l34.35-34.34a8,8,0,0,0-11.32-11.32L120,124.69V67.87ZM72,115.35l32-31.67v57l-32,32ZM140.7,184H83.32l56-56h56.74Z"></path></svg>
+          </div>
+          <div class="feat-card-info">
+            <span class="feat-card-value">39,5 × 80 × 73 cm</span>
+            <span class="feat-card-label">Compacta al guardar,<br>ideal para espacios chicos</span>
+          </div>
+        </div>
+        <div class="feat-card anim anim-d3">
+          <div class="icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="var(--icon-green)" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg>
+          </div>
+          <div class="feat-card-info">
+            <span class="feat-card-value">10 segundos</span>
+            <span class="feat-card-label">Plegado rápido y práctico,<br>listo para guardar al instante</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2.5: RESUMEN / SE ADAPTA A TU RUTINA -->
+  <section class="section-resumen" id="resumen" data-nav="caracteristicas">
+    <picture>
+      <source media="(max-width: 768px)" srcset="img/plegable-mobile.png" />
+      <img class="resumen-bg" src="img/plegable.png" alt="Tern Link B7 plegada" />
+    </picture>
+    <div class="resumen-content">
+      <div class="resumen-text anim">
+        <h2 class="section-title anim">Se adapta a tu <span class="highlight">rutina</span></h2>
+        <p class="resumen-copy anim anim-d1">Plégala en segundos y llévala a donde vayas. <br>La Link B7 se adapta a tu rutina de forma natural.</p>
+        <ul class="resumen-bullets anim anim-d2">
+          <li>
+            <span class="tick-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#070707" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            Ahorro de tiempo y espacio
+          </li>
+          <li>
+            <span class="tick-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#070707" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            Libertad en tus recorridos
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-rutina" id="acerca" data-nav="caracteristicas">
+    <div class="glow-bg glow-left" style="opacity: 0.5;"></div>
+    <div class="bg-lines">
+      <svg viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <line x1="50" y1="100" x2="1100" y2="520" stroke="url(#lineGrad1)" stroke-width="0.8" stroke-linecap="round" opacity="0.25"/>
+      </svg>
+    </div>
+    <div class="grid-inner">
+      <div class="rutina-text anim">
+        <h2 class="section-title anim">Te acompaña <span class="highlight">siempre</span></h2>
+      </div>
+
+      <!-- 3 cards: versatilidad en cualquier terreno -->
+      <div class="rutina-cards anim anim-d1">
+        <div class="rutina-card">
+          <img src="img/ciudad.png" alt="En la ciudad" />
+          <div class="rutina-card-caption">
+            <strong>En la ciudad</strong>
+            <p>Ideal para combinar con el transporte.</p>
+          </div>
+        </div>
+        <div class="rutina-card">
+          <img class="rutina-card-img-mountain" src="img/montaña.png" alt="En la montaña" />
+          <div class="rutina-card-caption">
+            <strong>En la montaña</strong>
+            <p>Resistente para cualquier sendero.</p>
+          </div>
+        </div>
+        <div class="rutina-card">
+          <img src="img/playa.png" alt="En la playa" />
+          <div class="rutina-card-caption">
+            <strong>En la playa</strong>
+            <p>Lista para tus vacaciones o paseos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 5: PLEGADO -->
+  <section class="section-diferente" id="beneficios" data-nav="beneficios">
+    <!-- Glow y Líneas de Fondo -->
+    <div class="glow-bg glow-right" style="opacity: 0.5;"></div>
+    <div class="bg-lines">
+      <svg viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <line x1="300" y1="50" x2="1380" y2="480" stroke="url(#lineGrad2)" stroke-width="0.8" stroke-linecap="round" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="diferente-layout">
+        <div class="diferente-title-wrap anim">
+          <h2 class="section-title anim">Lo que la hace <span class="highlight">diferente</span></h2>
+        </div>
+
+        <svg class="diferente-lines-svg">
+          <line id="line-qlock" class="diag-line-path" />
+          <line id="line-shimano" class="diag-line-path" />
+          <line id="line-fbl2" class="diag-line-path" />
+          <line id="line-magentix" class="diag-line-path" />
+        </svg>
+
+        <div class="diferente-col-left">
+          <div class="text-block" id="block-fbl2">
+            <strong>Junta de cuadro FBL 2</strong>
+            <span>Plegado suave, preciso y de alta resistencia.</span>
+          </div>
+          <div class="text-block" id="block-magentix">
+            <strong>Cierre Magentix 2.0</strong>
+            <span>Fijación magnética en las ruedas al plegarla.</span>
+          </div>
+        </div>
+
+        <div class="diferente-bici">
+          <picture>
+            <source media="(max-width: 768px)" srcset="img/halo-desple-mobile.png" />
+            <img class="bici-img" src="img/bici-desple.png" alt="Bicicleta Tern Link B7 desplegada" />
+          </picture>
+          <!-- Desktop hotspots -->
+          <div class="diag-hotspot right-side" style="left:58.1%;top:16.9%;" data-target="block-qlock" data-line="line-qlock">
+            <div class="diag-pill"></div>
+          </div>
+          <div class="diag-hotspot right-side" style="left:58.9%;top:36.6%;" data-target="block-shimano" data-line="line-shimano">
+            <div class="diag-pill"></div>
+          </div>
+          <div class="diag-hotspot left-side" style="left:45.2%;top:49.2%;" data-target="block-fbl2" data-line="line-fbl2">
+            <div class="diag-pill"></div>
+          </div>
+          <div class="diag-hotspot left-side" style="left:33.5%;top:64.8%;" data-target="block-magentix" data-line="line-magentix">
+            <div class="diag-pill"></div>
+          </div>
+          <!-- Mobile numbered circles -->
+          <div class="mobile-num-dot" id="dot-1" data-index="0" style="left:71.7%;top:17.8%;"></div>
+          <div class="mobile-num-dot" id="dot-2" data-index="1" style="left:72.9%;top:35.8%;"></div>
+          <div class="mobile-num-dot" id="dot-3" data-index="2" style="left:43.4%;top:50.7%;"></div>
+          <div class="mobile-num-dot" id="dot-4" data-index="3" style="left:21.6%;top:61.2%;"></div>
+        </div>
+
+        <!-- Mobile accordion -->
+        <div class="mobile-accordion" style="display:none;">
+          <div class="mobile-accordion-item">
+            <button class="mobile-accordion-trigger">
+              <div class="mobile-accordion-trigger-left">
+                <span class="mobile-accordion-num">1</span>
+                <span class="mobile-accordion-title">Manubrio Q-LOCK</span>
+              </div>
+              <span class="mobile-accordion-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            <div class="mobile-accordion-body">Bloqueo automático del manubrio en un solo movimiento.</div>
+          </div>
+          <div class="mobile-accordion-item">
+            <button class="mobile-accordion-trigger">
+              <div class="mobile-accordion-trigger-left">
+                <span class="mobile-accordion-num">2</span>
+                <span class="mobile-accordion-title">Cambios Shimano</span>
+              </div>
+              <span class="mobile-accordion-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            <div class="mobile-accordion-body">Con 7 velocidades para un ritmo fluido en cualquier calle.</div>
+          </div>
+          <div class="mobile-accordion-item">
+            <button class="mobile-accordion-trigger">
+              <div class="mobile-accordion-trigger-left">
+                <span class="mobile-accordion-num">3</span>
+                <span class="mobile-accordion-title">Junta de cuadro FBL 2</span>
+              </div>
+              <span class="mobile-accordion-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            <div class="mobile-accordion-body">Plegado suave, preciso y de alta resistencia.</div>
+          </div>
+          <div class="mobile-accordion-item">
+            <button class="mobile-accordion-trigger">
+              <div class="mobile-accordion-trigger-left">
+                <span class="mobile-accordion-num">4</span>
+                <span class="mobile-accordion-title">Cierre Magentix 2.0</span>
+              </div>
+              <span class="mobile-accordion-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            <div class="mobile-accordion-body">Fijación magnética en las ruedas al plegarla.</div>
+          </div>
+        </div>
+
+        <div class="diferente-col-right">
+          <div class="text-block" id="block-qlock">
+            <strong>Manubrio Q-LOCK</strong>
+            <span>Bloqueo automático del manubrio.</span>
+          </div>
+          <div class="text-block" id="block-shimano">
+            <strong>Cambios Shimano</strong>
+            <span>Con 7 velocidades para un ritmo fluido.</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  <!-- JS: Hotspot interactivo (sin cambios) -->
+  <script>
+    (function() {
+      let activeHotspot = null;
+
+      function updateActiveLine() {
+        if (!activeHotspot) {
+          if (window.innerWidth <= 768) {
+            const mobileDesc = document.querySelector('.diferente-mobile-desc');
+            if (mobileDesc) mobileDesc.classList.remove('show');
+          }
+          return;
+        }
+        const el = activeHotspot;
+        const layout = el.closest('.diferente-layout');
+        if (!layout) return;
+
+        if (window.innerWidth <= 768) {
+          const targetId = el.getAttribute('data-target');
+          const textBlock = document.getElementById(targetId);
+          const mobileDesc = layout.querySelector('.diferente-mobile-desc');
+          if (textBlock && mobileDesc) {
+            document.querySelectorAll('.text-block').forEach(item => item.classList.remove('active'));
+            textBlock.classList.add('active');
+            if (mobileDesc.classList.contains('show')) {
+              mobileDesc.style.opacity = '0';
+              mobileDesc.style.transform = 'translateY(5px)';
+              setTimeout(() => {
+                mobileDesc.innerHTML = textBlock.innerHTML;
+                mobileDesc.style.opacity = '1';
+                mobileDesc.style.transform = 'translateY(0)';
+              }, 120);
+            } else {
+              mobileDesc.innerHTML = textBlock.innerHTML;
+              mobileDesc.classList.add('show');
+            }
+          }
+          return;
+        }
+
+        const layoutRect = layout.getBoundingClientRect();
+        const pill = el.querySelector('.diag-pill');
+        if (!pill) return;
+        const pillRect = pill.getBoundingClientRect();
+        if (pillRect.width === 0) return;
+
+        const hotspotX = (pillRect.left + pillRect.width / 2) - layoutRect.left;
+        const hotspotY = (pillRect.top + pillRect.height / 2) - layoutRect.top;
+        const targetId = el.getAttribute('data-target');
+        const textBlock = document.getElementById(targetId);
+        if (!textBlock) return;
+
+        const isLeft = el.classList.contains('left-side');
+        let targetX;
+        const lineGap = 16;
+        const textRect = textBlock.getBoundingClientRect();
+
+        if (isLeft) {
+          // Line stops just before the right edge of the left text-block (closest to the bike)
+          targetX = (textRect.right - layoutRect.left) + lineGap;
+        } else {
+          // Line stops just before the left edge of the right text-block (closest to the bike)
+          targetX = (textRect.left - layoutRect.left) - lineGap;
+        }
+
+        const lineId = el.getAttribute('data-line');
+        const line = document.getElementById(lineId);
+        if (line) {
+          line.setAttribute('x1', hotspotX);
+          line.setAttribute('y1', hotspotY);
+          line.setAttribute('x2', targetX);
+          line.setAttribute('y2', hotspotY);
+          const length = Math.abs(targetX - hotspotX);
+          line.style.strokeDasharray = length;
+          if (!line.classList.contains('active')) {
+            line.style.strokeDashoffset = length;
+            line.getBoundingClientRect();
+          }
+          line.classList.add('active');
+          line.style.strokeDashoffset = '0';
+        }
+
+        const colRect = textBlock.parentElement.getBoundingClientRect();
+        const relativeY = (pillRect.top + pillRect.height / 2) - colRect.top;
+        const titleEl = textBlock.querySelector('strong');
+        const titleHeight = titleEl ? titleEl.offsetHeight : 20;
+        textBlock.style.top = (relativeY - titleHeight / 2) + 'px';
+        textBlock.classList.add('active');
+      }
+
+      function deactivateAll() {
+        document.querySelectorAll('.diag-hotspot').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.text-block').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.diag-line-path').forEach(line => {
+          if (line.classList.contains('active')) {
+            const length = line.style.strokeDasharray || '1000';
+            line.style.strokeDashoffset = length;
+            line.classList.remove('active');
+          }
+        });
+      }
+
+      function activateHotspot(el) {
+        deactivateAll();
+        el.classList.add('active');
+        activeHotspot = el;
+        updateActiveLine();
+      }
+
+      function toggleHotspot(el) {
+        const isActive = el.classList.contains('active');
+        if (isActive) { deactivateAll(); activeHotspot = null; updateActiveLine(); }
+        else { activateHotspot(el); }
+      }
+
+      document.querySelectorAll('.diag-hotspot').forEach(el => {
+        el.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); toggleHotspot(el); });
+      });
+
+      // Cierra el hotspot activo si se clickea en cualquier otro lado de la pantalla
+      document.addEventListener('click', (e) => {
+        if (activeHotspot && !e.target.closest('.diag-hotspot')) {
+          deactivateAll();
+          activeHotspot = null;
+          updateActiveLine();
+        }
+      });
+
+      function initDefaultHotspot() {
+        const initialActive = document.querySelector('.diag-hotspot.active');
+        if (initialActive) setTimeout(() => activateHotspot(initialActive), 100);
+      }
+
+      // Fix: los .text-block son position:absolute dentro de un flex container,
+      // por lo que width:100% ignora el padding del padre y la caja se extiende
+      // más allá del margen real. Acá fijamos el inset en px real, leído del
+      // padding computado de cada columna, para que el texto respete el margen.
+      function fixDiferenteTextInsets() {
+        const colLeft = document.querySelector('.diferente-col-left');
+        const colRight = document.querySelector('.diferente-col-right');
+        if (!colLeft || !colRight) return;
+        if (getComputedStyle(colLeft).display === 'none') return; // mobile, no aplica
+
+        const csLeft = getComputedStyle(colLeft);
+        colLeft.querySelectorAll('.text-block').forEach(tb => {
+          tb.style.left = csLeft.paddingLeft;
+          tb.style.right = csLeft.paddingRight;
+          tb.style.width = 'auto';
+        });
+
+        const csRight = getComputedStyle(colRight);
+        colRight.querySelectorAll('.text-block').forEach(tb => {
+          tb.style.left = csRight.paddingLeft;
+          tb.style.right = csRight.paddingRight;
+          tb.style.width = 'auto';
+        });
+      }
+
+      window.addEventListener('load', initDefaultHotspot);
+      window.addEventListener('load', fixDiferenteTextInsets);
+      window.addEventListener('resize', updateActiveLine);
+      window.addEventListener('resize', fixDiferenteTextInsets);
+    })();
+  </script>
+
+  <!-- SECCIÓN 6: TU CIUDAD -->
+
+
+  <!-- SECCIÓN 7: DISPLAY BANNER -->
+  <section class="section-plegado" id="plegado" data-nav="plegado">
+    <img class="plegado-bg" src="img/fondo-plegado.png" alt="" />
+    <div class="grid-inner">
+      <div class="plegado-title-wrap anim">
+        <h2 class="section-title anim">Plegala en <span class="highlight">segundos</span></h2>
+      </div>
+
+      <div class="plegado-stepper anim anim-d1">
+        <div class="stepper-step">
+          <div class="stepper-circle">1</div>
+          <div class="stepper-text">
+            <strong>Doblá el cuadro</strong>
+            <span>Accioná la palanca lateral y el cuadro se une en el centro.</span>
+          </div>
+        </div>
+        <div class="stepper-step">
+          <div class="stepper-circle">2</div>
+          <div class="stepper-text">
+            <strong>Bajá el manubrio</strong>
+            <span>Presioná el seguro Q-Lock y bajá el manubrio al nivel del sillín.</span>
+          </div>
+        </div>
+        <div class="stepper-step">
+          <div class="stepper-circle">3</div>
+          <div class="stepper-text">
+            <strong>Fijá las ruedas</strong>
+            <span>El cierre Magentix las mantiene unidas y prolijas.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2: DISEÑADA PARA VOS -->
+  <section class="section-display" id="display" data-nav="plegado">
+    <img class="display-bg" src="img/ciudad-frase.png" alt="" />
+    <div class="display-content anim">
+      <div class="display-text">
+        <h2>La ciudad es tuya.<br><span class="highlight" style="padding: 0 4px 1px; border-radius: 3px; display: inline-block; margin-top: 4px;">Pedaleala.</span></h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 8: ACCESORIOS -->
+  <section class="section-accesorios" id="accesorios" data-nav="accesorios">
+    <div class="grid-inner">
+      <div class="accesorios-inner">
+        <div class="accesorios-title-wrap anim">
+          <h2 class="accesorios-title">Complementá tus <span class="highlight">recorridos</span></h2>
+        </div>
+
+        <div class="carousel-outer anim anim-d1">
+          <button class="carousel-arrow" id="prevBtn">&#8249;</button>
+          <div class="carousel-green-card">
+            <div class="carousel-wrapper">
+              <div class="carousel-track" id="carouselTrack">
+                <div class="carousel-slide">
+                  <div class="carousel-img-wrap">
+                    <div class="carousel-halo-bg" style="background-image:url('img/bici-rack-haloFONDO.png')"></div>
+                    <img src="img/bici-rack-halo.png" alt="Rack trasero" />
+                    <div class="carousel-caption-wrap"><span class="carousel-caption">Rack trasero</span></div>
+                  </div>
+                </div>
+                <div class="carousel-slide">
+                  <div class="carousel-img-wrap">
+                    <div class="carousel-halo-bg" style="background-image:url('img/bici-basket-haloFONDO.png')"></div>
+                    <img src="img/bici-basket-halo.png" alt="Canasta" />
+                    <div class="carousel-caption-wrap"><span class="carousel-caption">Canasta</span></div>
+                  </div>
+                </div>
+                <div class="carousel-slide">
+                  <div class="carousel-img-wrap">
+                    <div class="carousel-halo-bg" style="background-image:url('img/bici-cargapesada-haloFONDO.png')"></div>
+                    <img src="img/bici-cargapesada-halo.png" alt="Rack de carga pesada" />
+                    <div class="carousel-caption-wrap"><span class="carousel-caption">Rack de carga pesada</span></div>
+                  </div>
+                </div>
+                <div class="carousel-slide">
+                  <div class="carousel-img-wrap">
+                    <div class="carousel-halo-bg" style="background-image:url('img/bici-fundaperro-haloFONDO.png')"></div>
+                    <img src="img/bici-fundaperro-halo.png" alt="Funda para perro" />
+                    <div class="carousel-caption-wrap"><span class="carousel-caption">Cubierta para perros</span></div>
+                  </div>
+                </div>
+                <div class="carousel-slide">
+                  <div class="carousel-img-wrap">
+                    <div class="carousel-halo-bg" style="background-image:url('img/bici-funda-haloFONDO.png')"></div>
+                    <img src="img/bici-funda-halo.png" alt="Funda de transporte" />
+                    <div class="carousel-caption-wrap"><span class="carousel-caption">Funda de transporte</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="carousel-arrow" id="nextBtn">&#8250;</button>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JS: Carrusel accesorios (sin cambios) -->
+  <script>
+    (function() {
+      const track = document.getElementById('carouselTrack');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const dotsContainer = document.getElementById('carouselDots');
+      if (!track) return;
+
+      const slides = Array.from(track.querySelectorAll('.carousel-slide'));
+      const total = slides.length;
+      let visible = window.innerWidth <= 768 ? 1 : 3;
+
+      slides.forEach(s => track.appendChild(s.cloneNode(true)));
+      [...slides].reverse().forEach(s => track.insertBefore(s.cloneNode(true), track.firstChild));
+
+      // Center Slide 0 initially (current is index of leftmost slide)
+      let current = visible === 3 ? total - 1 : total;
+      let isTransitioning = false;
+
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < total; i++) {
+          const dot = document.createElement('button');
+          dot.classList.add('carousel-dot');
+          if (i === 0) dot.classList.add('active');
+          dot.setAttribute('aria-label', `Slide ${i + 1}`);
+          dot.addEventListener('click', () => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            // Center the clicked slide
+            current = visible === 3 ? total + i - 1 : total + i;
+            update();
+          });
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function getSlideWidth() {
+        return track.querySelector('.carousel-slide').offsetWidth + 16;
+      }
+
+      function getCurrentTranslation() {
+        const slideWidth = getSlideWidth();
+        let tx = -(current * slideWidth);
+        if (visible === 1) {
+          const wrapperWidth = track.parentElement.offsetWidth;
+          const slideOnlyWidth = track.querySelector('.carousel-slide').offsetWidth;
+          const offset = (wrapperWidth - slideOnlyWidth) / 2;
+          tx += offset;
+        }
+        return tx;
+      }
+
+      function update(animate = true) {
+        if (!animate) {
+          track.style.transitionDuration = '0ms';
+          void track.offsetWidth; // Force layout reflow to flush styles immediately
+        } else {
+          track.style.transitionDuration = '400ms';
+        }
+        track.style.transform = 'translateX(' + getCurrentTranslation() + 'px)';
+        updateDots();
+        updateCenter();
+      }
+
+      function updateCenter() {
+        const children = Array.from(track.children);
+        children.forEach(el => el.classList.remove('is-center'));
+        const centerIndex = visible === 3 ? current + 1 : current;
+        if (children[centerIndex]) children[centerIndex].classList.add('is-center');
+      }
+
+      function updateDots() {
+        if (!dotsContainer) return;
+        const centerIndex = visible === 3 ? current + 1 : current;
+        const activeIndex = (centerIndex - total + total) % total;
+        const dots = dotsContainer.querySelectorAll('.carousel-dot');
+        dots.forEach((dot, index) => {
+          if (index === activeIndex) dot.classList.add('active');
+          else dot.classList.remove('active');
+        });
+      }
+
+      track.addEventListener('transitionend', (e) => {
+        if (e.target !== track) return;
+        
+        const centerIndex = visible === 3 ? current + 1 : current;
+        if (centerIndex >= total * 2) {
+          current = current - total;
+          update(false);
+        } else if (centerIndex < total) {
+          current = current + total;
+          update(false);
+        }
+        isTransitioning = false;
+      });
+
+      function next() { if (isTransitioning) return; isTransitioning = true; current++; update(); }
+      function prev() { if (isTransitioning) return; isTransitioning = true; current--; update(); }
+
+      function flashGlow(btn) {
+        if (!btn) return;
+        btn.classList.add('is-active');
+        setTimeout(() => btn.classList.remove('is-active'), 250);
+      }
+
+      nextBtn && nextBtn.addEventListener('click', () => { next(); flashGlow(nextBtn); });
+      prevBtn && prevBtn.addEventListener('click', () => { prev(); flashGlow(prevBtn); });
+
+      let startX = 0;
+      let diffX = 0;
+      let startTx = 0;
+
+      track.addEventListener('touchstart', (e) => {
+        if (isTransitioning) return;
+        startX = e.touches[0].clientX;
+        diffX = 0;
+        startTx = getCurrentTranslation();
+        track.style.transitionDuration = '0ms';
+      }, { passive: true });
+
+      track.addEventListener('touchmove', (e) => {
+        if (isTransitioning) return;
+        const currentX = e.touches[0].clientX;
+        diffX = currentX - startX;
+        track.style.transform = 'translateX(' + (startTx + diffX) + 'px)';
+      }, { passive: true });
+
+      track.addEventListener('touchend', () => {
+        if (isTransitioning) return;
+        if (Math.abs(diffX) > 50) {
+          if (diffX < 0) next();
+          else prev();
+        } else {
+          isTransitioning = true;
+          update(true);
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        const centerIndex = visible === 3 ? current + 1 : current;
+        const activeIndex = (centerIndex - total + total) % total;
+        visible = window.innerWidth <= 768 ? 1 : 3;
+        current = visible === 3 ? total + activeIndex - 1 : total + activeIndex;
+        update(false);
+      });
+      window.addEventListener('load', () => update(false));
+      update(false);
+      update(false);
+    })();
+  </script>
+
+  <!-- SECCIÓN 4: LO QUE LA HACE DIFERENTE -->
+  <!-- FOOTER -->
+  <footer id="contacto">
+    <div class="grid-inner">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="#" class="footer-logo">
+            <img src="img/logo_navbar.png" alt="Tern" />
+          </a>
+          <p class="footer-tagline">Bicicletas bien hechas que te abren las puertas del día y del mundo.</p>
+          <div class="footer-socials">
+            <a href="#" aria-label="X">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L2.182 2.25h6.953l4.256 5.626 5.853-5.626Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <a href="#" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+              </svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <span class="footer-col-title">Menú</span>
+          <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#caracteristicas">Características</a></li>
+            <li><a href="#beneficios">Componentes</a></li>
+            <li><a href="#plegado">Plegado</a></li>
+            <li><a href="#accesorios">Accesorios</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <span class="footer-col-title">Contacto</span>
+          <div class="footer-contact-info">
+            <p><strong>Teléfono:</strong> +54 11 1234 5678</p>
+            <p><strong>Email:</strong> info@ternbicycles.com</p>
+            <p>Buenos Aires, Argentina</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-credits">Diseñado por Rocío Camila Erdbecher</div>
+    </div>
+  </footer>
+
+  <!-- JS: Navbar scroll-spy -->
+  <script>
+    (function() {
+      const sections = document.querySelectorAll('section[id], footer[id]');
+      const navLinks = document.querySelectorAll('.nav-links a');
+      const nav = document.querySelector('nav');
+      const navToggle = document.querySelector('.nav-toggle');
+      const navLinksContainer = document.querySelector('.nav-links');
+
+      if (navToggle && navLinksContainer) {
+        navToggle.addEventListener('click', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          navToggle.classList.toggle('open');
+          navLinksContainer.classList.toggle('open');
+        });
+        navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            navToggle.classList.remove('open');
+            navLinksContainer.classList.remove('open');
+          });
+        });
+        document.addEventListener('click', (e) => {
+          if (!navLinksContainer.contains(e.target) && !navToggle.contains(e.target)) {
+            navToggle.classList.remove('open');
+            navLinksContainer.classList.remove('open');
+          }
+        });
+      }
+
+      function onScroll() {
+        const scrollPos = window.scrollY || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+
+        if (scrollPos > 50) nav.classList.add('scrolled');
+        else nav.classList.remove('scrolled');
+
+        let currentSectionId = '';
+        if (scrollPos + windowHeight >= docHeight - 20) {
+          currentSectionId = 'contacto';
+        } else {
+          sections.forEach(section => {
+            const sectionTop = section.offsetTop - 120;
+            const sectionHeight = section.offsetHeight;
+            if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+              currentSectionId = section.dataset.nav || section.getAttribute('id');
+            }
+          });
+        }
+
+        if (currentSectionId) {
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${currentSectionId}`) link.classList.add('active');
+            else link.classList.remove('active');
+          });
+        }
+      }
+
+      window.addEventListener('scroll', onScroll);
+      onScroll();
+    })();
+  </script>
+
+  <!-- JS: Plegado carousel mobile -->
+  <script>
+    (function() {
+      const wrap = document.querySelector('.plegado-photos-wrap');
+      const prevBtn = document.querySelector('.plegado-arrow.prev');
+      const nextBtn = document.querySelector('.plegado-arrow.next');
+      if (wrap && prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const firstCard = wrap.querySelector('.plegado-photo');
+          if (!firstCard) return;
+          const cardWidth = firstCard.clientWidth;
+          wrap.scrollBy({ left: -(cardWidth + 12), behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const firstCard = wrap.querySelector('.plegado-photo');
+          if (!firstCard) return;
+          const cardWidth = firstCard.clientWidth;
+          wrap.scrollBy({ left: cardWidth + 12, behavior: 'smooth' });
+        });
+
+        const toggleArrows = () => {
+          const scrollLeft = wrap.scrollLeft;
+          const maxScrollLeft = wrap.scrollWidth - wrap.clientWidth;
+          prevBtn.style.opacity = scrollLeft <= 5 ? '0' : '1';
+          prevBtn.style.pointerEvents = scrollLeft <= 5 ? 'none' : 'auto';
+          nextBtn.style.opacity = scrollLeft >= maxScrollLeft - 5 ? '0' : '1';
+          nextBtn.style.pointerEvents = scrollLeft >= maxScrollLeft - 5 ? 'none' : 'auto';
+        };
+
+        wrap.addEventListener('scroll', toggleArrows);
+        window.addEventListener('resize', toggleArrows);
+        window.addEventListener('load', () => setTimeout(toggleArrows, 300));
+        setTimeout(toggleArrows, 200);
+      }
+    })();
+  </script>
+
+
+  <script>
+    // Slider sección acerca de
+    (function() {
+      const track = document.getElementById('rutinaSlidesTrack');
+      const prevBtn = document.getElementById('rutinasPrev');
+      const nextBtn = document.getElementById('rutinasNext');
+      if (!track) return;
+      const slides = track.querySelectorAll('.rutina-slide');
+      const total = slides.length;
+      let cur = 0;
+      function go(n) {
+        cur = (n + total) % total;
+        track.style.transform = 'translateX(-' + cur * 100 + '%)';
+      }
+      function flashGlow(btn) {
+        btn.classList.add('is-active');
+        setTimeout(() => btn.classList.remove('is-active'), 250);
+      }
+      prevBtn && prevBtn.addEventListener('click', () => { go(cur - 1); flashGlow(prevBtn); });
+      nextBtn && nextBtn.addEventListener('click', () => { go(cur + 1); flashGlow(nextBtn); });
+    })();
+  </script>
+
+  <script>
+    // Mobile accordion - tecnologias
+    (function() {
+      function initAccordion() {
+        const accordion = document.querySelector('.mobile-accordion');
+        if (!accordion) return;
+        const items = accordion.querySelectorAll('.mobile-accordion-item');
+        const dots = document.querySelectorAll('.mobile-num-dot');
+
+        function activateItem(index) {
+          items.forEach((item, i) => {
+            if (i === index) {
+              item.classList.add('open');
+            } else {
+              item.classList.remove('open');
+            }
+          });
+          dots.forEach((dot, i) => {
+            if (i === index) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+
+        // Accordion trigger click
+        items.forEach((item, index) => {
+          const trigger = item.querySelector('.mobile-accordion-trigger');
+          trigger.addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
+            if (isOpen) {
+              item.classList.remove('open');
+              dots[index] && dots[index].classList.remove('active');
+            } else {
+              activateItem(index);
+            }
+          });
+        });
+
+        // Dot click opens corresponding accordion item
+        dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            activateItem(index);
+            // Scroll accordion into view
+            accordion.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        });
+      }
+
+      function checkMobile() {
+        const accordion = document.querySelector('.mobile-accordion');
+        const dots = document.querySelectorAll('.mobile-num-dot');
+        if (!accordion) return;
+        if (window.innerWidth <= 768) {
+          accordion.style.display = 'flex';
+          dots.forEach(d => d.style.display = 'flex');
+        } else {
+          accordion.style.display = 'none';
+          dots.forEach(d => d.style.display = 'none');
+        }
+      }
+      initAccordion();
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+    })();
+  </script>
+
+  <script>
+    // Animaciones de entrada con IntersectionObserver (se resetean al salir de vista)
+    (function() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          } else {
+            entry.target.classList.remove('visible');
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      document.querySelectorAll('.anim, .anim-fade').forEach(el => {
+        observer.observe(el);
+      });
+    })();
+  </script>
+
+
+</body>
+</html>
